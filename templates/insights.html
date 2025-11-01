@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Insights | Smart Crop Advisor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0; padding: 0; font-family: 'Poppins', sans-serif; color: white;
+      background: url("{{ url_for('static', filename='images/download (1).jpg') }}") no-repeat center center fixed;
+      background-size: cover; min-height: 100vh; overflow-y: auto; position: relative;
+    }
+    body::before {
+      content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); z-index: 0;
+    }
+    .container {
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh; padding: 100px 20px 160px; position: relative; z-index: 1;
+    }
+    .card {
+      background: rgba(255,255,255,0.12); padding: 40px 50px; border-radius: 20px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.4); max-width: 800px; width: 100%;
+      animation: fadeInUp 1s ease-in-out;
+    }
+    h1 {
+      text-align: center; font-size: 28px; font-weight: 600; color: #00ffb3;
+      text-shadow: 0 0 10px rgba(255,255,255,0.6); margin-bottom: 30px;
+    }
+    h2 {
+      text-align: center; font-weight: 600; margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.6);
+    }
+    p {
+      text-align: center; font-size: 15px; opacity: 0.9; margin-bottom: 25px;
+    }
+    ul {
+      list-style: none; padding: 0; margin: 0 0 30px;
+    }
+    ul li {
+      margin: 10px 0; font-size: 16px; background: rgba(255,255,255,0.15);
+      padding: 10px 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    h3 {
+      margin-top: 30px; text-align: center; font-weight: 600;
+      text-shadow: 0 0 5px rgba(255,255,255,0.4);
+    }
+    .video-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+      gap: 20px; margin-top: 20px;
+    }
+    iframe {
+      border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease;
+    }
+    iframe:hover {
+      transform: scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 10;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .nav-item {
+      text-align: center; color: white; text-decoration: none;
+      font-size: 14px; opacity: 0.9; transition: 0.3s ease;
+    }
+    .nav-item:hover {
+      opacity: 1; transform: translateY(-3px);
+    }
+    .nav-item.active {
+      color: #00ffb3; font-weight: 600;
+    }
+    .nav-item p {
+      margin: 4px 0 0; font-size: 12px;
+    }
+    @keyframes fadeInUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @media (max-width: 480px) {
+      .card { padding: 30px 25px; }
+      ul li { font-size: 14px; }
+      iframe { height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      {% if crop %}
+        <h1>🌱 Predicted Crop: {{ crop|capitalize }}</h1>
+      {% endif %}
+
+      <h2>📊 Crop Maintenance & Tutorials</h2>
+      <p>Here are some tips to help you grow your predicted crop successfully:</p>
+
+      {% if crop %}
+        <h3>🌾 Tips for {{ crop|capitalize }}</h3>
+        <ul>
+          {% if crop == "rice" %}
+            <li>Maintain standing water 2–3 cm in early growth.</li>
+            <li>Use nitrogen-rich fertilizer during tillering stage.</li>
+            <li>Protect from pests using integrated pest management (IPM).</li>
+          {% elif crop == "wheat" %}
+            <li>Keep soil moisture at 50–60%.</li>
+            <li>Apply preventive fungicide to avoid rust.</li>
+            <li>Harvest when grain is golden and dry.</li>
+          {% elif crop == "maize" %}
+            <li>Ensure good drainage and sunlight.</li>
+            <li>Use balanced NPK fertilizer.</li>
+            <li>Monitor for stem borers and leaf blight.</li>
+          {% elif crop == "cotton" %}
+            <li>Use drip irrigation to conserve water.</li>
+            <li>Apply potassium during flowering stage.</li>
+            <li>Watch for bollworms and whiteflies.</li>
+          {% elif crop == "sugarcane" %}
+            <li>Maintain soil moisture during tillering.</li>
+            <li>Use organic mulch to retain moisture.</li>
+            <li>Control shoot borer with pheromone traps.</li>
+          {% else %}
+            <li>Use compost and test soil pH weekly.</li>
+            <li>Apply NPK fertilizers as per crop growth stage.</li>
+            <li>Protect from common pests using neem oil or IPM.</li>
+          {% endif %}
+        </ul>
+      {% else %}
+        <p>No crop prediction available yet.</p>
+      {% endif %}
+
+      <h3>🎥 Recommended YouTube Tutorials</h3>
+      <div class="video-grid">
+        {% if crop == "rice" %}
+          <iframe src="https://www.youtube.com/embed/xRi6U4Ke8mM" frameborder="0" allowfullscreen></iframe>
+        {% elif crop == "wheat" %}
+          <iframe src="https://www.youtube.com/embed/8D_1j8e7v3M" frameborder="0" allowfullscreen></iframe>
+        {% elif crop == "maize" %}
+          <iframe src="https://www.youtube.com/embed/3wz6YVZJw9A" frameborder="0" allowfullscreen></iframe>
+        {% elif crop == "cotton" %}
+          <iframe src="https://www.youtube.com/embed/1gkZzNQ9z9g" frameborder="0" allowfullscreen></iframe>
+        {% elif crop == "sugarcane" %}
+          <iframe src="https://www.youtube.com/embed/2bKZzNQ9z9g" frameborder="0" allowfullscreen></iframe>
+        {% else %}
+          <iframe src="https://www.youtube.com/embed/fMQwUXNpHnE" frameborder="0" allowfullscreen></iframe>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/home" class="nav-item">🏠<p>Home</p></a>
+    <a href="/insights" class="nav-item active">📊<p>Insights</p></a>
+    <a href="/weather" class="nav-item">🌦️<p>Weather</p></a>
+  </div>
+</body>
+</html>

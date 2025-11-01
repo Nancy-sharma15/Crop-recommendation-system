@@ -1,0 +1,235 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Crop Advisor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Global styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='images/Countryside Vectors - Download Free High-Quality Vectors from Freepik _ Freepik.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      min-height: 100vh;
+      overflow-y: auto; /* make page scrollable */
+      position: relative;
+    }
+
+    /* Overlay to darken background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 0;
+    }
+
+    /* Container centers the card */
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 100px 20px 160px; /* space for bottom nav */
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Card styling */
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .header {
+      margin-bottom: 25px;
+    }
+
+    .header .icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    .header h1 {
+      margin: 10px 0;
+      font-size: 28px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* Input styles */
+    form input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.85);
+      outline: none;
+    }
+
+    /* Button styles */
+    form button {
+      width: 100%;
+      padding: 12px 0;
+      background-color: #00a86b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    form button:hover {
+      background-color: #00925f;
+      transform: translateY(-2px);
+    }
+
+    /* Result box */
+    .result {
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .result h2 {
+      margin: 0 0 10px;
+    }
+
+    .result .crop {
+      font-size: 22px;
+      font-weight: 600;
+      color: #00ffb3;
+      text-shadow: 0 0 5px rgba(0, 255, 179, 0.6);
+    }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 10;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-item {
+      text-align: center;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      opacity: 0.9;
+      transition: 0.3s ease;
+    }
+
+    .nav-item:hover {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+
+    .nav-item.active {
+      color: #00ffb3;
+      font-weight: 600;
+    }
+
+    .nav-item p {
+      margin: 4px 0 0;
+      font-size: 12px;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card {
+        padding: 30px 25px;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      form input, form button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <img src="{{ url_for('static', filename='leaf-icon.png') }}" alt="Leaf Icon" class="icon" />
+        <h1>Smart Crop Advisor</h1>
+        <p>Get the best crop recommendation based on your soil and climate data.</p>
+      </div>
+
+      <form method="POST">
+        <input type="number" name="N" placeholder="Nitrogen (N)" required />
+        <input type="number" name="P" placeholder="Phosphorus (P)" required />
+        <input type="number" name="K" placeholder="Potassium (K)" required />
+        <input type="number" name="temperature" placeholder="Temperature (°C)" required />
+        <input type="number" name="humidity" placeholder="Humidity (%)" required />
+        <input type="number" name="ph" placeholder="Soil pH" required />
+        <input type="number" name="rainfall" placeholder="Rainfall (mm)" required />
+        <button type="submit">Predict Crop</button>
+      </form>
+
+      {% if crop %}
+      <div class="result">
+        <h2>🌾 Recommended Crop:</h2>
+        <p class="crop">{{ crop }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Fixed Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="/home" class="nav-item active">🏠<p>Home</p></a>
+    <a href="/insights" class="nav-item">📊<p>Insights</p></a>
+    <a href="/weather" class="nav-item">🌦️<p>Weather</p></a>
+  </div>
+</body>
+</html>
