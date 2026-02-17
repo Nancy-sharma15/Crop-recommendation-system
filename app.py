@@ -10,12 +10,12 @@ from datetime import datetime
 load_dotenv()
 app = Flask(__name__)
 
-# Load model
+
 model_path = os.path.join(os.path.dirname(__file__), "model", "crop_model.pkl")
 with open(model_path, "rb") as f:
     model = pickle.load(f)
 
-# MongoDB connection
+
 client = MongoClient(os.getenv("MONGO_URI"), tls=True)
 db = client[os.getenv("DB_NAME")]
 collection = db["predictions"]
@@ -37,7 +37,7 @@ def insights():
     if crop:
         crop_name = crop.strip().lower()
 
-        # Crop-specific tips
+
         crop_tips = {
             "rice": [
                 "Maintain standing water during early growth.",
@@ -72,7 +72,7 @@ def insights():
             "Apply fertilizers based on crop growth stage."
         ])
 
-        # Crop-specific YouTube tutorials
+
         crop_tutorials = {
             "rice": [
                 {"title": "Rice Farming Techniques", "url": "https://www.youtube.com/watch?v=xRi6U4Ke8mM"},
@@ -180,7 +180,7 @@ def home():
 
             collection.insert_one(record)
 
-            # Redirect to insights page with crop name
+            
             return redirect(f"/insights?crop={crop}")
 
         except Exception as e:
