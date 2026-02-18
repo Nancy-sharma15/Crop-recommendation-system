@@ -16,10 +16,17 @@ with open(model_path, "rb") as f:
     model = pickle.load(f)
 
 
-client = MongoClient(os.getenv("MONGO_URI"), tls=True)
-db = client[os.getenv("DB_NAME")]
+mongo_uri = os.getenv("MONGO_URI")
+db_name = os.getenv("DB_NAME", "crop_db")
+
+if not mongo_uri:
+    raise ValueError("MONGO_URI not set in environment variables")
+
+client = MongoClient(mongo_uri, tls=True)
+db = client[db_name]
 collection = db["predictions"]
 users = db["users"]
+
 
 @app.route("/")
 def root():
@@ -189,4 +196,4 @@ def home():
 
     return render_template("index.html", crop=crop, error=error)
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
